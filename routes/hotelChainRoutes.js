@@ -27,8 +27,8 @@ router.post("/", async (req, res) => {
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
-  const { name, address, email, phoneNumber } = req.body;
-  const newChain = await createHotelChain(name, address, email, phoneNumber);
+  const { name, address, email, phone_number } = req.body;
+  const newChain = await createHotelChain(name, address, email, phone_number);
   res.json(newChain);
 });
 
@@ -39,13 +39,13 @@ router.put("/:id", async (req, res) => {
   if (error) {
     return res.status(400).json({ error: error.details[0].message });
   }
-  const { name, address, email, phoneNumber } = req.body;
+  const { name, address, email, phone_number } = req.body;
   const updatedChain = await updateHotelChain(
     chain_id,
     name,
     address,
     email,
-    phoneNumber
+    phone_number
   );
   res.json(updatedChain);
 });

@@ -33,13 +33,13 @@ router.post("/", async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    const { chain_id, name, address, email, phoneNumber, category } = req.body;
+    const { chain_id, name, address, email, phone_number, category } = req.body;
     const hotel = await hotelQueries.createHotel(
       chain_id,
       name,
       address,
       email,
-      phoneNumber,
+      phone_number,
       category
     );
     res.status(201).json(hotel);
@@ -67,13 +67,13 @@ router.put("/:id", async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    const { name, address, email, phoneNumber, category } = req.body;
+    const { name, address, email, phone_number, category } = req.body;
     const hotel = await hotelQueries.updateHotel(
       req.params.id,
       name,
       address,
       email,
-      phoneNumber,
+      phone_number,
       category
     );
     if (!hotel) return res.status(404).json({ message: "Hotel not found" });

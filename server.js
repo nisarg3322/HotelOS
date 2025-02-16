@@ -5,12 +5,14 @@ const hotelChainRoutes = require("./routes/hotelChainRoutes");
 const hotelRoutes = require("./routes/hotelRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const customerRoutes = require("./routes/customerRoutes");
+const employeeRoutes = require("./routes/employeeRoutes");
 
 app.use(express.json());
 app.use("/hotelchains", hotelChainRoutes);
 app.use("/hotels", hotelRoutes);
 app.use("/rooms", roomRoutes);
 app.use("/customers", customerRoutes);
+app.use("/employees", employeeRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

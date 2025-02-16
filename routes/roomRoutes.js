@@ -46,21 +46,21 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: error.details[0].message });
     }
     const {
-      hotelId,
+      hotel_id,
       price,
       amenities,
       capacity,
       view,
-      isExtendable,
+      is_extendable,
       problems,
     } = req.body;
     const room = await roomQueries.createRoom(
-      hotelId,
+      hotel_id,
       price,
       amenities,
       capacity,
       view,
-      isExtendable,
+      is_extendable,
       problems
     );
     res.status(201).json(room);
@@ -77,7 +77,7 @@ router.put("/:id", async (req, res) => {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    const { price, amenities, capacity, view, isExtendable, problems } =
+    const { price, amenities, capacity, view, is_extendable, problems } =
       req.body;
     const room = await roomQueries.updateRoom(
       req.params.id,
@@ -85,7 +85,7 @@ router.put("/:id", async (req, res) => {
       amenities,
       capacity,
       view,
-      isExtendable,
+      is_extendable,
       problems
     );
     if (!room) return res.status(404).json({ message: "Room not found" });

@@ -11,7 +11,7 @@ const hotelChainSchema = Joi.object({
   name: Joi.string().required(),
   address: addressSchema.required(),
   email: Joi.string().email().required(),
-  phoneNumber: Joi.string().required(),
+  phone_number: Joi.string().required(),
 });
 
 const hotelSchema = Joi.object({
@@ -19,7 +19,7 @@ const hotelSchema = Joi.object({
   name: Joi.string().required(),
   address: addressSchema.required(),
   email: Joi.string().email().required(),
-  phoneNumber: Joi.string().required(),
+  phone_number: Joi.string().required(),
   category: Joi.number().required(),
 });
 
@@ -27,17 +27,17 @@ const updateHotelSchema = Joi.object({
   name: Joi.string().required(),
   address: addressSchema.required(),
   email: Joi.string().email().required(),
-  phoneNumber: Joi.string().required(),
+  phone_number: Joi.string().required(),
   category: Joi.number().required(),
 });
 
 const roomSchema = Joi.object({
-  hotelId: Joi.number().required(),
+  hotel_id: Joi.number().required(),
   price: Joi.number().min(0).required(),
   amenities: Joi.string().required(),
   capacity: Joi.string().valid("single", "double").required(),
   view: Joi.string().valid("sea", "mountain").required(),
-  isExtendable: Joi.boolean(),
+  is_extendable: Joi.boolean(),
   problems: Joi.string().required(),
 });
 
@@ -48,8 +48,26 @@ const updateRoomSchema = Joi.object({
     .valid("single", "double", "family", "suite")
     .required(),
   view: Joi.string().valid("sea", "mountain").required(),
-  isExtendable: Joi.boolean(),
+  is_extendable: Joi.boolean(),
   problems: Joi.string().required(),
+});
+
+const employeeSchema = Joi.object({
+  full_name: Joi.string().min(3).max(100).required(),
+  address: Joi.string().required(),
+  ssn: Joi.string().required(),
+  hotel_id: Joi.number().integer().required(),
+  role: Joi.string()
+    .valid("Receptionist", "Housekeeping", "Chef", "Security")
+    .required(),
+});
+
+const updateEmployeeSchema = Joi.object({
+  full_name: Joi.string().min(3).max(100).required(),
+  address: Joi.string().required(),
+  role: Joi.string()
+    .valid("Receptionist", "Housekeeping", "Chef", "Security")
+    .required(),
 });
 
 module.exports = {
@@ -59,4 +77,6 @@ module.exports = {
   updateHotelSchema,
   roomSchema,
   updateRoomSchema,
+  employeeSchema,
+  updateEmployeeSchema,
 };
