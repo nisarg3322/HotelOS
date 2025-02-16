@@ -1,0 +1,16 @@
+Tasks:
+
+1) make a list of features, Queries and APIs needed for the application.
+2) start implimenting Queries and required schema for returning object/response.
+3) start making API and decide what type of objects/params needed for each api.
+4) test each api
+5) integrate Ollama and make a script to download and run ollama.
+6) now try to integrate ollama with the application. checkout the video.
+7)Test the ollama integration without the frontend. 
+8) make a front end -> plan a layout for the application
+9) quickly make a simple frontend.
+
+Optional/Future tasks:
+
+1) try deploying the application to cloud.
+2) look into getting real data form internet apis.
