@@ -31,9 +31,32 @@ const updateHotelSchema = Joi.object({
   category: Joi.number().required(),
 });
 
+const roomSchema = Joi.object({
+  hotelId: Joi.number().required(),
+  price: Joi.number().min(0).required(),
+  amenities: Joi.string().required(),
+  capacity: Joi.string().valid("single", "double").required(),
+  view: Joi.string().valid("sea", "mountain").required(),
+  isExtendable: Joi.boolean(),
+  problems: Joi.string().required(),
+});
+
+const updateRoomSchema = Joi.object({
+  price: Joi.number().min(0).required(),
+  amenities: Joi.string().required(),
+  capacity: Joi.string()
+    .valid("single", "double", "family", "suite")
+    .required(),
+  view: Joi.string().valid("sea", "mountain").required(),
+  isExtendable: Joi.boolean(),
+  problems: Joi.string().required(),
+});
+
 module.exports = {
   addressSchema,
   hotelChainSchema,
   hotelSchema,
   updateHotelSchema,
+  roomSchema,
+  updateRoomSchema,
 };

@@ -19,7 +19,7 @@ const getAllHotelChains = async () => {
 const getHotelChainById = async (hotelChainId) => {
   try {
     const result = await pool.query(
-      "SELECT hc.name, hc.number_of_hotels, hc.email, hc.phone_number, a.street_address, a.city ,a.state ,a.postal_code \n" +
+      "SELECT hc.chain_id, hc.name, hc.number_of_hotels, hc.email, hc.phone_number, a.street_address, a.city ,a.state ,a.postal_code \n" +
         "FROM HotelChain hc \n" +
         " inner join address a \n" +
         "on hc.central_office_address_id = a.address_id and hc.chain_id = $1",
