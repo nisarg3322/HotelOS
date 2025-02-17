@@ -70,6 +70,23 @@ const updateEmployeeSchema = Joi.object({
     .required(),
 });
 
+const bookingSchema = Joi.object({
+  check_in_date: Joi.date().required(),
+  check_out_date: Joi.date().required(),
+  room_id: Joi.number().required(),
+  customer_id: Joi.number().required(),
+  total_cost: Joi.number().min(0).required(),
+});
+
+const inPersonBookingSchema = Joi.object({
+  check_in_date: Joi.date().required(),
+  check_out_date: Joi.date().required(),
+  room_id: Joi.number().required(),
+  customer_id: Joi.number().required(),
+  total_cost: Joi.number().min(0).required(),
+  employee_id: Joi.number().required(),
+});
+
 module.exports = {
   addressSchema,
   hotelChainSchema,
@@ -79,4 +96,5 @@ module.exports = {
   updateRoomSchema,
   employeeSchema,
   updateEmployeeSchema,
+  bookingSchema,
 };

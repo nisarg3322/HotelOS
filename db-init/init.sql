@@ -61,30 +61,22 @@ CREATE TABLE Employee (
     FOREIGN KEY (hotel_id) REFERENCES Hotel(hotel_id) on delete cascade
 );
 
-create table Payment (
-    payment_id SERIAL PRIMARY KEY,
-    payment_date DATE not null default CURRENT_DATE,
-    amount DECIMAL(10, 2) check (amount >= 0) not null
-);
-
 CREATE TABLE Booking (
     booking_id SERIAL PRIMARY KEY,
-    is_archived BOOLEAN default false,
+    employee_id INT,
+    room_id INT not null,
+    customer_id INT not null,
     check_in_date DATE  not null,
     check_out_date DATE not null,
     booking_date DATE   not null default CURRENT_DATE,
-    is_checkout BOOLEAN default false,
-    room_id INT not null,
-    customer_id INT not null,
     is_renting BOOLEAN default false,
+    is_checkout BOOLEAN default false,
+    is_archived BOOLEAN default false,
     total_cost DECIMAL(10, 2) check (total_cost >= 0) not null,
     is_paid BOOLEAN default false,
-    payment_id INT, 
-    employee_id INT,
     FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
     FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),     
-    FOREIGN KEY (room_id) REFERENCES Room(room_id),
-    FOREIGN KEY (payment_id) REFERENCES Payment(payment_id)
+    FOREIGN KEY (room_id) REFERENCES Room(room_id)
 );
 
 
@@ -174,7 +166,7 @@ RETURNS TRIGGER AS $$
 BEGIN
     UPDATE Booking
     SET is_archived = TRUE
-    WHERE check_out_date < CURRENT_DATE;
+    WHERE check_out_date < CURRENT_DATE and is_checkout = TRUE;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

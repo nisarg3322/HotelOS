@@ -4,6 +4,41 @@ const roomQueries = require("../queries/roomQueries");
 const { roomSchema } = require("../schemas");
 const { updateRoomSchema } = require("../schemas");
 
+router.post("/available-rooms", async (req, res) => {
+  const {
+    startDate,
+    endDate,
+    capacity,
+    state,
+    chainId,
+    category,
+    minRooms,
+    maxPrice,
+  } = req.body;
+
+  if (!startDate || !endDate) {
+    return res
+      .status(400)
+      .json({ error: "startDate and endDate are required" });
+  }
+
+  try {
+    const rooms = await roomQueries.getAvailableRooms(
+      startDate,
+      endDate,
+      capacity || null,
+      state || null,
+      chainId || null,
+      category || null,
+      minRooms || null,
+      maxPrice || null
+    );
+    res.json(rooms);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 📌 Get all rooms
 router.get("/", async (req, res) => {
   try {
@@ -37,6 +72,8 @@ router.get("/hotel/:hotelId", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+//get rooms based on filters
 
 // 📌 Create a new room
 router.post("/", async (req, res) => {
