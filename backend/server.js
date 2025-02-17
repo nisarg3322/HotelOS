@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const port = process.env.PORT || 3000;
 const hotelChainRoutes = require("./routes/hotelChainRoutes");
 const hotelRoutes = require("./routes/hotelRoutes");
@@ -9,6 +10,7 @@ const employeeRoutes = require("./routes/employeeRoutes");
 const managerRoutes = require("./routes/managerRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 
+app.use(cors({ origin: "http://localhost:4200", credentials: true }));
 app.use(express.json());
 app.use("/hotelchains", hotelChainRoutes);
 app.use("/hotels", hotelRoutes);
