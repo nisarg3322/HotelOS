@@ -9,8 +9,9 @@ const customerRoutes = require("./routes/customerRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
 const managerRoutes = require("./routes/managerRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
+const ollamaRoutes = require("./routes/ollamaRoutes");
 
-app.use(cors({ origin: "http://localhost:4200", credentials: true }));
+app.use(cors());
 app.use(express.json());
 app.use("/hotelchains", hotelChainRoutes);
 app.use("/hotels", hotelRoutes);
@@ -19,6 +20,7 @@ app.use("/customers", customerRoutes);
 app.use("/employees", employeeRoutes);
 app.use("/managers", managerRoutes);
 app.use("/bookings", bookingRoutes);
+app.use("/ollama", ollamaRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
