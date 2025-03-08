@@ -14,25 +14,27 @@ const Navbar = () => {
   }, [router, user]);
 
   return (
-    <nav className="bg-base-200 shadow-md p-4">
+    <nav className="bg-base-200 shadow-md p-4 sticky top-0 z-50 w-full ">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-primary">
-          Hotel Management
+        <Link href="/" className="text-xl font-bold text-secondary">
+          e-Hotels
         </Link>
         <div className="flex space-x-4">
           <Link href="/hotels" className="btn btn-ghost">
             Hotels
           </Link>
-          <Link href="/rooms" className="btn btn-ghost">
-            Rooms
-          </Link>
           <Link href="/customer" className="btn btn-ghost">
-            Customers
+            Search Rooms
           </Link>
           {user ? (
-            <button className="btn btn-ghost" onClick={logout}>
-              Logout
-            </button>
+            <>
+              <Link href="/profile" className="btn btn-ghost">
+                Profile
+              </Link>
+              <button className="btn btn-ghost" onClick={logout}>
+                Logout
+              </button>
+            </>
           ) : (
             <>
               <Link href="/login" className="btn btn-primary">

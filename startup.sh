@@ -9,7 +9,7 @@ docker-compose down
 echo "removing docker volumes..."
 docker volume rm backend_pgdata
 echo "starting docker containers..."
-docker-compose up --build -d
+docker-compose up --build
 
 echo "waiting for backend to start..."
 while ! curl -s -o /dev/null -w "%{http_code}" localhost:3000 | grep -qE "200|302"; do

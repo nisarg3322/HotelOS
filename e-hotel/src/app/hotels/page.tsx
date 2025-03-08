@@ -1,6 +1,6 @@
 "use client"; // For Next.js 13+ App Router
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Hotel {
   hotel_id: number;
@@ -17,7 +17,7 @@ interface Hotel {
 
 export default function Hotels() {
   const [hotels, setHotels] = useState<Hotel[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Set loading to true initially
 
   const fetchHotels = async () => {
     setLoading(true);
@@ -33,16 +33,17 @@ export default function Hotels() {
     }
   };
 
+  // Fetch hotels as soon as the component is mounted
+  useEffect(() => {
+    fetchHotels();
+  }, []); // Empty dependency array means this runs only once on mount
+
   return (
     <div
       data-theme="dark"
       className="min-h-screen w-full flex flex-col items-center p-8"
     >
       <h1 className="text-4xl font-bold mb-6">🏨 Hotel Listings</h1>
-
-      <button onClick={fetchHotels} className="btn btn-primary mb-6">
-        {loading ? "Loading..." : "Fetch Hotels"}
-      </button>
 
       {loading && <span className="loading loading-spinner loading-lg"></span>}
 
@@ -79,9 +80,7 @@ export default function Hotels() {
               </div>
             ))
           : !loading && (
-              <p className="text-gray-500 text-lg">
-                No hotels available. Click the button above to fetch.
-              </p>
+              <p className="text-gray-500 text-lg">No hotels available.</p>
             )}
       </div>
     </div>

@@ -29,6 +29,17 @@ const getRoomsByHotelId = async (hotelId) => {
     console.error(err.message);
   }
 };
+
+const getAvailableRoomsPerArea = async () => {
+  try {
+    const result = await pool.query(` Select * from AvailableRoomsPerArea`);
+    return result.rows;
+  } catch (err) {
+    console.error(err.message);
+    throw err;
+  }
+};
+
 const getAvailableRooms = async (
   startDate,
   endDate,
@@ -49,6 +60,7 @@ const getAvailableRooms = async (
             'category', h.category,
             'number_of_rooms', h.number_of_rooms,
             'hotel_chain', hc.name,
+            'total_capacity', rcp.total_capacity,
             'address', json_build_object(
                 'street_address', a.street_address,
                 'city', a.city,
@@ -61,6 +73,7 @@ const getAvailableRooms = async (
       FROM Hotel h
       JOIN HotelChain hc ON h.chain_id = hc.chain_id
       JOIN Address a ON h.address_id = a.address_id
+      JOIN RoomCapacityPerHotel rcp ON h.hotel_id = rcp.hotel_id
       LEFT JOIN (
         SELECT r.hotel_id, 
                json_agg(
@@ -88,7 +101,7 @@ const getAvailableRooms = async (
         GROUP BY r.hotel_id
       ) r ON h.hotel_id = r.hotel_id
       WHERE 
-        ($5::TEXT IS NULL OR a.state = $5::TEXT)      -- Filter by state
+        ($5::TEXT IS NULL OR a.city = $5::TEXT)      -- Filter by state
         AND ($6::INT IS NULL OR hc.chain_id = $6::INT) -- Filter by hotel chain
         AND ($7::INT IS NULL OR h.category = $7::INT) -- Filter by hotel category
         AND ($8::INT IS NULL OR h.number_of_rooms >= $8::INT)  -- Filter by min hotel room count
@@ -191,4 +204,5 @@ module.exports = {
   updateRoom,
   deleteRoom,
   getAvailableRooms,
+  getAvailableRoomsPerArea,
 };

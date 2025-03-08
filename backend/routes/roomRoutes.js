@@ -9,7 +9,7 @@ router.post("/available-rooms", async (req, res) => {
     startDate,
     endDate,
     capacity,
-    state,
+    city,
     chainId,
     category,
     minRooms,
@@ -27,12 +27,21 @@ router.post("/available-rooms", async (req, res) => {
       startDate,
       endDate,
       capacity || null,
-      state || null,
+      city || null,
       chainId || null,
       category || null,
       minRooms || null,
       maxPrice || null
     );
+    res.json(rooms);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/available-rooms-per-area", async (req, res) => {
+  try {
+    const rooms = await roomQueries.getAvailableRoomsPerArea();
     res.json(rooms);
   } catch (err) {
     res.status(500).json({ error: err.message });

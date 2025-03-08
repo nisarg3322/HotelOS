@@ -1,24 +1,36 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useUser } from "../../../context/UserContext";
+import BookingModal from "./components/bookingModal";
 
 const CustomerLandingPage = () => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [endDate, setEndDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
+  });
   const [capacity, setCapacity] = useState("");
-  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
   const [chainId, setChainId] = useState("");
   const [category, setCategory] = useState("");
   const [minRooms, setMinRooms] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const { user } = useUser();
-  console.log(user);
+  const [selectedRoom, setSelectedRoom] = useState<{
+    roomId: number;
+    price: number;
+  } | null>(null);
+  const [triggerFetch, setTriggerFetch] = useState(0); // State to trigger re-fetch
+
+  const [showModal, setShowModal] = useState(false);
+
   interface Hotel {
     name: string;
     hotel_chain: string;
     category: number;
+    total_capacity: number;
     address: {
       street_address: string;
       city: string;
@@ -33,8 +45,34 @@ const CustomerLandingPage = () => {
     }[];
   }
 
+  interface AreaCount {
+    city: string;
+    available_rooms: number;
+  }
+
   const [hotels, setHotels] = useState<{ hotels: Hotel[] }[]>([]);
-  const router = useRouter();
+  const [availableRoomsPerArea, setAvailableRoomsPerArea] = useState<
+    AreaCount[]
+  >([]);
+
+  useEffect(() => {
+    const fetchAvailableRoomsPerArea = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/rooms/available-rooms-per-area",
+          {
+            method: "GET",
+          }
+        );
+        const data = await response.json();
+        setAvailableRoomsPerArea(data);
+      } catch (error) {
+        console.error("Error fetching available rooms per area:", error);
+      }
+    };
+
+    fetchAvailableRoomsPerArea();
+  }, [triggerFetch]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,7 +89,7 @@ const CustomerLandingPage = () => {
                 startDate,
                 endDate,
                 capacity,
-                state,
+                city,
                 chainId,
                 category,
                 minRooms,
@@ -75,12 +113,19 @@ const CustomerLandingPage = () => {
     startDate,
     endDate,
     capacity,
-    state,
+    city,
     chainId,
     category,
     minRooms,
     maxPrice,
+    triggerFetch,
   ]);
+
+  useEffect(() => {});
+
+  const refreshRooms = () => {
+    setTriggerFetch((prev) => prev + 1); // Increment to trigger re-fetch
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -113,13 +158,18 @@ const CustomerLandingPage = () => {
           <option value="suite">Suite</option>
         </select>
 
-        <input
-          type="text"
-          placeholder="State"
-          value={state}
-          onChange={(e) => setState(e.target.value)}
-          className="input input-bordered w-full"
-        />
+        <select
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="select select-bordered w-full"
+        >
+          <option value="">Select City</option>
+          {availableRoomsPerArea.map((area) => (
+            <option key={area.city} value={area.city}>
+              {area.city} ({area.available_rooms} rooms)
+            </option>
+          ))}
+        </select>
 
         <input
           type="number"
@@ -129,13 +179,18 @@ const CustomerLandingPage = () => {
           className="input input-bordered w-full"
         />
 
-        <input
-          type="number"
-          placeholder="Category (1-5)"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="input input-bordered w-full"
-        />
+        <div className="relative">
+          <input
+            type="number"
+            placeholder="Ratings (1-5)"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="input input-bordered w-full pl-10"
+          />
+          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+            ★
+          </span>
+        </div>
 
         <input
           type="number"
@@ -158,8 +213,11 @@ const CustomerLandingPage = () => {
       {hotels.length > 0 ? (
         hotels.map((hotelObj, index) => (
           <div key={index} className="card bg-base-100 shadow-lg p-6 mb-6">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="text-2xl font-semibold flex items-center justify-between">
               {hotelObj.hotels[0].name}
+              <span className="text-sm font-medium text-gray-600">
+                Total Capacity: {hotelObj.hotels[0].total_capacity} guests
+              </span>
             </h2>
             <p className="text-gray-500">
               {hotelObj.hotels[0].hotel_chain} - {hotelObj.hotels[0].category}{" "}
@@ -189,7 +247,13 @@ const CustomerLandingPage = () => {
 
                   <button
                     className="btn btn-primary mt-2 w-full"
-                    onClick={() => router.push("/rooms/" + room.room_id)}
+                    onClick={() => {
+                      setSelectedRoom({
+                        roomId: room.room_id,
+                        price: room.price,
+                      });
+                      setShowModal(true);
+                    }}
                   >
                     Book Now
                   </button>
@@ -200,6 +264,19 @@ const CustomerLandingPage = () => {
         ))
       ) : (
         <p>No rooms available. Try adjusting filters.</p>
+      )}
+
+      {/* Use BookingModal Component */}
+      {selectedRoom && (
+        <BookingModal
+          roomId={selectedRoom.roomId}
+          price={selectedRoom.price}
+          startDate={startDate}
+          endDate={endDate}
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          refreshRooms={refreshRooms}
+        />
       )}
     </div>
   );

@@ -223,7 +223,7 @@ WHERE b.booking_id IS NULL
 GROUP BY a.city;
 
 CREATE VIEW RoomCapacityPerHotel AS
-SELECT h.name AS hotel_name, SUM(
+SELECT h.name AS hotel_name, h.hotel_id, SUM(
     CASE 
         WHEN r.capacity = 'single' THEN 1
         WHEN r.capacity = 'double' THEN 2
@@ -234,7 +234,7 @@ SELECT h.name AS hotel_name, SUM(
 ) AS total_capacity
 FROM Hotel h
 JOIN Room r ON h.hotel_id = r.hotel_id
-GROUP BY h.name;
+GROUP BY h.name, h.hotel_id;
 
 
 INSERT INTO Address (street_address, city, state, postal_code) VALUES
