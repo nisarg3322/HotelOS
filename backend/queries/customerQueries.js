@@ -11,11 +11,11 @@ const getAllCustomers = async () => {
 };
 
 // 🔹 Get Customer by ID
-const getCustomerById = async (customerId) => {
+const getCustomerByUserId = async (userId) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM Customer WHERE customer_id = $1",
-      [customerId]
+      "SELECT * FROM Customer WHERE user_id = $1",
+      [userId]
     );
     return result.rows[0];
   } catch (err) {
@@ -24,12 +24,12 @@ const getCustomerById = async (customerId) => {
 };
 
 // 🔹 Create a New Customer
-const createCustomer = async (fullName, address, SSN) => {
+const createCustomer = async (fullName, address, SSN, userId) => {
   try {
     const result = await pool.query(
-      `INSERT INTO Customer (full_name, address, SSN) 
-       VALUES ($1, $2, $3) RETURNING *`,
-      [fullName, address, SSN]
+      `INSERT INTO Customer (full_name, address, ssn, user_id) 
+       VALUES ($1, $2, $3,$4) RETURNING *`,
+      [fullName, address, SSN, userId]
     );
     return result.rows[0];
   } catch (err) {
@@ -66,7 +66,7 @@ const deleteCustomer = async (customerId) => {
 
 module.exports = {
   getAllCustomers,
-  getCustomerById,
+  getCustomerByUserId,
   createCustomer,
   updateCustomer,
   deleteCustomer,

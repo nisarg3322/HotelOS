@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "../../../context/UserContext";
 
 const CustomerLandingPage = () => {
   const [startDate, setStartDate] = useState("");
@@ -12,6 +13,8 @@ const CustomerLandingPage = () => {
   const [category, setCategory] = useState("");
   const [minRooms, setMinRooms] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const { user } = useUser();
+  console.log(user);
   interface Hotel {
     name: string;
     hotel_chain: string;

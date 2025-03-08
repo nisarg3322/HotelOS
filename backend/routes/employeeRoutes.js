@@ -30,22 +30,6 @@ router.get("/hotel/:hotelId", async (req, res) => {
   res.json(employees);
 });
 
-// 🔹 Create a New Employee
-router.post("/", async (req, res) => {
-  const { error } = employeeSchema.validate(req.body);
-  if (error) return res.status(400).json({ message: error.details[0].message });
-
-  const { full_name, address, ssn, hotel_id, role } = req.body;
-  const newEmployee = await createEmployee(
-    full_name,
-    address,
-    ssn,
-    hotel_id,
-    role
-  );
-  res.status(201).json(newEmployee);
-});
-
 // 🔹 Update an Employee
 router.put("/:id", async (req, res) => {
   const { error } = updateEmployeeSchema.validate(req.body);

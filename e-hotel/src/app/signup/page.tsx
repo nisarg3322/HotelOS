@@ -15,11 +15,7 @@ const RegisterPage = () => {
   const [role, setRole] = useState("");
 
   const router = useRouter();
-  const { login, user } = useUser();
-
-  useEffect(() => {
-    console.log("Current user:", user);
-  }, [user]);
+  const { login } = useUser();
 
   // Fix hydration issue: Ensure `isCustomer` is only set on client
   useEffect(() => {

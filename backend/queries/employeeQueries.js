@@ -11,11 +11,11 @@ const getAllEmployees = async () => {
 };
 
 // 🔹 Get Employee by ID
-const getEmployeeById = async (employeeId) => {
+const getEmployeeByUserId = async (userId) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM Employee WHERE employee_id = $1",
-      [employeeId]
+      "SELECT * FROM Employee WHERE user_id = $1",
+      [userId]
     );
     return result.rows[0];
   } catch (err) {
@@ -37,12 +37,19 @@ const getEmployeesByHotelId = async (hotelId) => {
 };
 
 // 🔹 Create a New Employee
-const createEmployee = async (fullName, address, ssn, hotelId, role) => {
+const createEmployee = async (
+  userId,
+  fullName,
+  address,
+  ssn,
+  hotelId,
+  role
+) => {
   try {
     const result = await pool.query(
-      `INSERT INTO Employee (full_name, address, ssn, hotel_id, role) 
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [fullName, address, ssn, hotelId, role]
+      `INSERT INTO Employee (full_name, address, ssn, hotel_id, role, user_id) 
+       VALUES ($1, $2, $3, $4, $5 ,$6) RETURNING *`,
+      [fullName, address, ssn, hotelId, role, userId]
     );
     return result.rows[0];
   } catch (err) {
@@ -79,7 +86,7 @@ const deleteEmployee = async (employeeId) => {
 
 module.exports = {
   getAllEmployees,
-  getEmployeeById,
+  getEmployeeByUserId,
   createEmployee,
   updateEmployee,
   deleteEmployee,

@@ -11,10 +11,17 @@ docker volume rm backend_pgdata
 echo "starting docker containers..."
 docker-compose up --build -d
 
-echo "changing dir to frontend"
-cd ../e-hotel
-echo "installing packages..."
-npm install
-echo "Starting frontend..."
-npm run dev
-echo "frontend started"
+echo "waiting for backend to start..."
+while ! curl -s -o /dev/null -w "%{http_code}" localhost:3000 | grep -qE "200|302"; do
+    sleep 0.1
+done
+
+echo "backend started"
+
+# echo "changing dir to frontend"
+# cd ../e-hotel
+# echo "installing packages..."
+# npm install
+# echo "Starting frontend..."
+# npm run dev
+# echo "frontend started"
