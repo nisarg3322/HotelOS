@@ -33,11 +33,12 @@ router.post("/", async (req, res) => {
 
 // 🔹 Update a Customer
 router.put("/:id", async (req, res) => {
-  const { full_name, address } = req.body;
+  const { full_name, address, ssn } = req.body;
   const updatedCustomer = await updateCustomer(
     req.params.id,
     full_name,
-    address
+    address,
+    ssn
   );
   if (!updatedCustomer)
     return res.status(404).json({ message: "Customer not found" });

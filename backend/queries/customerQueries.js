@@ -38,13 +38,13 @@ const createCustomer = async (fullName, address, SSN, userId) => {
 };
 
 // 🔹 Update a Customer by ID
-const updateCustomer = async (customerId, fullName, address) => {
+const updateCustomer = async (customerId, fullName, address, ssn) => {
   try {
     const result = await pool.query(
       `UPDATE Customer 
-       SET full_name = $1, address = $2 
+       SET full_name = $1, address = $2 , ssn = $4
        WHERE customer_id = $3 RETURNING *`,
-      [fullName, address, customerId]
+      [fullName, address, customerId, ssn]
     );
     return result.rows[0];
   } catch (err) {

@@ -9,7 +9,6 @@ const {
   deleteEmployee,
 } = require("../queries/employeeQueries");
 const { employeeSchema } = require("../schemas");
-const { updateEmployeeSchema } = require("../schemas");
 
 // 🔹 Get All Employees
 router.get("/", async (req, res) => {
@@ -32,15 +31,17 @@ router.get("/hotel/:hotelId", async (req, res) => {
 
 // 🔹 Update an Employee
 router.put("/:id", async (req, res) => {
-  const { error } = updateEmployeeSchema.validate(req.body);
+  const { error } = employeeSchema.validate(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
-  const { full_name, address, role } = req.body;
+  const { full_name, address, role, hotel_id, ssn } = req.body;
   const updatedEmployee = await updateEmployee(
     req.params.id,
     full_name,
     address,
-    role
+    role,
+    hotel_id,
+    ssn
   );
   if (!updatedEmployee)
     return res.status(404).json({ message: "Employee not found" });

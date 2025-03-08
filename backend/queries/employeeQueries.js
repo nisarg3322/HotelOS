@@ -58,13 +58,20 @@ const createEmployee = async (
 };
 
 // 🔹 Update an Employee
-const updateEmployee = async (employeeId, fullName, address, role) => {
+const updateEmployee = async (
+  employeeId,
+  fullName,
+  address,
+  role,
+  hotel_id,
+  ssn
+) => {
   try {
     const result = await pool.query(
       `UPDATE Employee 
-       SET full_name = $1, address = $2, role = $3
+       SET full_name = $1, address = $2, role = $3, hotel_id = $5, ssn = $6
        WHERE employee_id = $4 RETURNING *`,
-      [fullName, address, role, employeeId]
+      [fullName, address, role, employeeId, hotel_id, ssn]
     );
     return result.rows[0];
   } catch (err) {

@@ -57,17 +57,7 @@ const employeeSchema = Joi.object({
   address: Joi.string().required(),
   ssn: Joi.string().required(),
   hotel_id: Joi.number().integer().required(),
-  role: Joi.string()
-    .valid("Receptionist", "Housekeeping", "Chef", "Security")
-    .required(),
-});
-
-const updateEmployeeSchema = Joi.object({
-  full_name: Joi.string().min(3).max(100).required(),
-  address: Joi.string().required(),
-  role: Joi.string()
-    .valid("Receptionist", "Housekeeping", "Chef", "Security")
-    .required(),
+  role: Joi.string().required(),
 });
 
 const bookingSchema = Joi.object({
@@ -95,6 +85,5 @@ module.exports = {
   roomSchema,
   updateRoomSchema,
   employeeSchema,
-  updateEmployeeSchema,
   bookingSchema,
 };
