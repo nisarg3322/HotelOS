@@ -72,6 +72,25 @@ const getBookingById = async (bookingId) => {
     console.error(err.message);
   }
 };
+
+// 🔹 Get Hotel Bookings
+const getHotelBookings = async (hotelId) => {
+  try {
+    const result = await pool.query(
+      `SELECT b.*, c.full_name AS customer_name, r.room_id, e.full_name AS employee_name
+       FROM Booking b
+       JOIN Customer c ON b.customer_id = c.customer_id
+       JOIN Room r ON b.room_id = r.room_id
+        LEFT JOIN Employee e ON b.employee_id = e.employee_id
+       WHERE r.hotel_id = $1`,
+      [hotelId]
+    );
+    return result.rows;
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
 // 🔹 Create a New Booking
 const createOnlineBooking = async (
   checkInDate,
@@ -102,8 +121,8 @@ const createInPersonBooking = async (
 ) => {
   try {
     const result = await pool.query(
-      `INSERT INTO Booking (check_in_date, check_out_date, room_id, customer_id, total_cost, employee_id, is_renting = true) 
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      `INSERT INTO Booking (check_in_date, check_out_date, room_id, customer_id, total_cost, employee_id, is_renting) 
+       VALUES ($1, $2, $3, $4, $5, $6, true) RETURNING *`,
       [checkInDate, checkOutDate, roomId, customerId, totalCost, employeeId]
     );
     return result.rows[0];
@@ -178,4 +197,5 @@ module.exports = {
   payBooking,
   checkoutBooking,
   deleteBooking,
+  getHotelBookings,
 };

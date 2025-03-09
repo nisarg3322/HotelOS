@@ -86,4 +86,5 @@ module.exports = {
   updateRoomSchema,
   employeeSchema,
   bookingSchema,
+  inPersonBookingSchema,
 };

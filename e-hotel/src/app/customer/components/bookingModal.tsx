@@ -67,6 +67,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
         <p className="py-4">
           Room ID: <strong>{roomId}</strong> <br />
           Price: <strong>${price}/night</strong> <br />
+          Total Cost: <strong>${totalCost}</strong> <br />
           Dates:{" "}
           <strong>
             {startDate} to {endDate}

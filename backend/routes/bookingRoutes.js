@@ -9,8 +9,9 @@ const {
   payBooking,
   checkoutBooking,
   deleteBooking,
+  getHotelBookings,
 } = require("../queries/bookingQueries");
-const { bookingSchema } = require("../schemas");
+const { bookingSchema, inPersonBookingSchema } = require("../schemas");
 const { route } = require("./managerRoutes");
 
 // 🔹 Get All Bookings
@@ -64,6 +65,11 @@ router.post("/in-person", async (req, res) => {
     employee_id
   );
   res.status(201).json(newBooking);
+});
+
+router.get("/hotel/:hotel_id", async (req, res) => {
+  const bookings = await getHotelBookings(req.params.hotel_id);
+  res.json(bookings);
 });
 
 // 🔹 Rent a Booking

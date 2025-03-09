@@ -20,18 +20,22 @@ const Navbar = () => {
           e-Hotels
         </Link>
         <div className="flex space-x-4">
-          <Link href="/hotels" className="btn btn-ghost">
-            Hotels
-          </Link>
-          <Link href="/customer" className="btn btn-ghost">
-            Search Rooms
-          </Link>
+          {user && user.is_customer ? (
+            <Link href="/customer" className="btn btn-ghost">
+              Search Rooms
+            </Link>
+          ) : (
+            <Link href="/employee" className="btn btn-ghost">
+              Dashboard
+            </Link>
+          )}
+
           {user ? (
             <>
               <Link href="/profile" className="btn btn-ghost">
                 Profile
               </Link>
-              <button className="btn btn-ghost" onClick={logout}>
+              <button className="btn btn-secondary" onClick={logout}>
                 Logout
               </button>
             </>
