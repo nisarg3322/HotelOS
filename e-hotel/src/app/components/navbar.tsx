@@ -25,9 +25,14 @@ const Navbar = () => {
               Search Rooms
             </Link>
           ) : (
-            <Link href="/employee" className="btn btn-ghost">
-              Dashboard
-            </Link>
+            <>
+              <Link href="/hotels" className="btn btn-ghost">
+                Manage Hotel
+              </Link>
+              <Link href="/employee" className="btn btn-ghost">
+                Dashboard
+              </Link>
+            </>
           )}
 
           {user ? (

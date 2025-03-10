@@ -35,7 +35,9 @@ const roomSchema = Joi.object({
   hotel_id: Joi.number().required(),
   price: Joi.number().min(0).required(),
   amenities: Joi.string().required(),
-  capacity: Joi.string().valid("single", "double").required(),
+  capacity: Joi.string()
+    .valid("single", "double", "family", "suite")
+    .required(),
   view: Joi.string().valid("sea", "mountain").required(),
   is_extendable: Joi.boolean(),
   problems: Joi.string().required(),

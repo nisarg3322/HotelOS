@@ -58,10 +58,10 @@ done
 
 echo "Backend started"
 
-# echo "Changing dir to frontend"
-# cd ../e-hotel
-# echo "Installing packages..."
-# npm install
-# echo "Starting frontend..."
-# npm run dev
-# echo "Frontend started"
+echo "Changing dir to frontend"
+cd ../e-hotel
+echo "Installing packages..."
+npm install
+echo "Starting frontend..."
+npm run dev
+echo "Frontend started"

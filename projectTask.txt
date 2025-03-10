@@ -14,3 +14,9 @@ Optional/Future tasks:
 
 1) try deploying the application to cloud.
 2) look into getting real data form internet apis.
+
+
+remaining:
+
+add update, delete and create a new hotel and room 
+

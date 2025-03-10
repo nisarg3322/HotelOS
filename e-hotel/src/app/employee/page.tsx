@@ -1,20 +1,8 @@
-// "use client";
-// import { useUser } from "context/UserContext";
-
-// const EmployeePage = () => {
-//   const { user } = useUser();
-//   const bookings = await fetch("http://localhost:3000/bookings/hotel/" + user.hotel_id).then((res) => res.json());
-
-//   return (
-
-//   );
-// };
-
-// export default EmployeePage;
 "use client";
 import { useState, useEffect } from "react";
 import { useUser } from "context/UserContext";
 import RentRoomModal from "./component/rentRoomModal";
+import EditRoomModal from "./component/EditRoomModal";
 
 const EmployeePage = () => {
   const { user } = useUser();
@@ -29,6 +17,10 @@ const EmployeePage = () => {
     room_id: number;
     price: number;
   } | null>(null);
+  const [payFirst, setPayFirst] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [roomToEdit, setRoomToEdit] = useState<Room | null>(null);
+  const [hotels, setHotels] = useState("");
 
   interface Booking {
     booking_id: number;
@@ -50,10 +42,17 @@ const EmployeePage = () => {
   interface Room {
     room_id: number;
     price: number;
-    capacity: number;
+    capacity: string;
     view: string;
     amenities: string;
+    is_extendable: boolean;
+    problems: string;
   }
+
+  const handleEditRoom = (room: Room) => {
+    setRoomToEdit(room);
+    setIsEditModalOpen(true);
+  };
 
   const handlePayment = async (bookingId: number) => {
     try {
@@ -73,7 +72,13 @@ const EmployeePage = () => {
     }
   };
 
-  const handleCheckIn = async (bookingId: number) => {
+  const handleCheckIn = async (bookingId: number, isPaid: boolean) => {
+    if (!isPaid) {
+      setPayFirst(true);
+      return;
+    } else {
+      setPayFirst(false);
+    }
     try {
       const response = await fetch(
         `http://localhost:3000/bookings/${bookingId}/rent`,
@@ -164,17 +169,21 @@ const EmployeePage = () => {
 
     const fetchBookingsAndRooms = async () => {
       try {
-        const [bookingsRes, roomsRes] = await Promise.all([
+        const [bookingsRes, roomsRes, hotelRes] = await Promise.all([
           fetch(`http://localhost:3000/bookings/hotel/${user.hotel_id}`).then(
             (res) => res.json()
           ),
           fetch(`http://localhost:3000/rooms/hotel/${user.hotel_id}`).then(
             (res) => res.json()
           ),
+          fetch(`http://localhost:3000/hotels/${user.hotel_id}`).then((res) =>
+            res.json().then((data) => data.hotel_name)
+          ),
         ]);
 
         setBookings(bookingsRes);
         setRooms(roomsRes);
+        setHotels(hotelRes);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -195,12 +204,34 @@ const EmployeePage = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">Employee Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-4">Employee Dashboard ({hotels})</h1>
 
       {/* Bookings Section */}
       <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-3">Bookings</h2>
         <div className="overflow-x-auto">
+          {payFirst && (
+            <div
+              role="alert"
+              className="alert alert-error"
+              onClick={() => setPayFirst(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>Please make the payment first!!</span>
+            </div>
+          )}
           <table className="table w-full">
             <thead>
               <tr>
@@ -255,8 +286,10 @@ const EmployeePage = () => {
                     <td>
                       {!booking.is_renting && !booking.is_checkout && (
                         <button
-                          className="btn btn-primary"
-                          onClick={() => handleCheckIn(booking.booking_id)}
+                          className="btn btn-success"
+                          onClick={() =>
+                            handleCheckIn(booking.booking_id, booking.is_paid)
+                          }
                         >
                           Check-in
                         </button>
@@ -312,18 +345,26 @@ const EmployeePage = () => {
                 <p>Capacity: {room.capacity}</p>
                 <p>View: {room.view}</p>
                 <p>Amenities: {room.amenities}</p>
-                <button
-                  className="btn btn-primary mt-3"
-                  onClick={() => {
-                    setSelectedRoom({
-                      room_id: room.room_id,
-                      price: room.price,
-                    });
-                    setIsModalOpen(true);
-                  }}
-                >
-                  Rent
-                </button>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleEditRoom(room)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setSelectedRoom({
+                        room_id: room.room_id,
+                        price: room.price,
+                      });
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    Rent
+                  </button>
+                </div>
               </div>
             ))
           ) : (
@@ -338,6 +379,14 @@ const EmployeePage = () => {
               isOpen={isModalOpen}
               onClose={() => setIsModalOpen(false)}
               onRent={handleRentInPerson}
+            />
+          )}
+          {roomToEdit && isEditModalOpen && (
+            <EditRoomModal
+              room={roomToEdit}
+              isOpen={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              onRoomUpdated={() => setUpdateData(Math.random())}
             />
           )}
         </div>
