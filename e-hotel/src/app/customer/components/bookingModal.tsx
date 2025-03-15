@@ -2,6 +2,7 @@
 
 import { useUser } from "context/UserContext";
 import { useState } from "react";
+import { API_URL } from "utils/config";
 
 interface BookingModalProps {
   roomId: number;
@@ -36,7 +37,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
     setLoading(true);
     console.log(user.customer_id);
     try {
-      const response = await fetch("http://localhost:3000/bookings", {
+      const response = await fetch(`${API_URL}/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

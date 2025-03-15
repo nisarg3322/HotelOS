@@ -10,7 +10,10 @@ export default function Home() {
   const [loading, setLoading] = useState(true); // Add a loading state to prevent redirection mismatch
 
   useEffect(() => {
-    function redirectUser(user: User | null, router: any) {
+    function redirectUser(
+      user: User | null,
+      router: ReturnType<typeof useRouter>
+    ) {
       if (loading) return; // Prevent redirect until loading is complete
       if (!user) {
         router.push("/login");

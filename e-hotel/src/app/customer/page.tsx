@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import BookingModal from "./components/bookingModal";
+import { API_URL } from "utils/config";
 
 const CustomerLandingPage = () => {
   const [startDate, setStartDate] = useState(
@@ -59,7 +60,7 @@ const CustomerLandingPage = () => {
     const fetchAvailableRoomsPerArea = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/rooms/available-rooms-per-area",
+          `${API_URL}/rooms/available-rooms-per-area`,
           {
             method: "GET",
           }
@@ -78,25 +79,22 @@ const CustomerLandingPage = () => {
     const fetchData = async () => {
       if (startDate && endDate) {
         try {
-          const response = await fetch(
-            "http://localhost:3000/rooms/available-rooms",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                startDate,
-                endDate,
-                capacity,
-                city,
-                chainId,
-                category,
-                minRooms,
-                maxPrice,
-              }),
-            }
-          );
+          const response = await fetch(`${API_URL}/rooms/available-rooms`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              startDate,
+              endDate,
+              capacity,
+              city,
+              chainId,
+              category,
+              minRooms,
+              maxPrice,
+            }),
+          });
 
           if (!response.ok) throw new Error("Failed to fetch rooms");
 

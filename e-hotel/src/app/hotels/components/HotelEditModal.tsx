@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Hotel } from "../page";
+import { API_URL } from "utils/config";
 
 interface HotelEditModalProps {
   hotel: Hotel;
@@ -48,16 +49,13 @@ const HotelEditModal: React.FC<HotelEditModalProps> = ({
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/hotels/${hotel.hotel_id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedHotel),
-        }
-      );
+      const response = await fetch(`${API_URL}/hotels/${hotel.hotel_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedHotel),
+      });
 
       const result = await response.json();
 

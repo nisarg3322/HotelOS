@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "context/UserContext";
 import RentRoomModal from "./component/rentRoomModal";
 import EditRoomModal from "./component/EditRoomModal";
+import { API_URL } from "utils/config";
 
 const EmployeePage = () => {
   const { user } = useUser();
@@ -56,12 +57,9 @@ const EmployeePage = () => {
 
   const handlePayment = async (bookingId: number) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/bookings/${bookingId}/pay`,
-        {
-          method: "PUT",
-        }
-      );
+      const response = await fetch(`${API_URL}/bookings/${bookingId}/pay`, {
+        method: "PUT",
+      });
 
       if (!response.ok) throw new Error("Payment failed");
 
@@ -80,14 +78,11 @@ const EmployeePage = () => {
       setPayFirst(false);
     }
     try {
-      const response = await fetch(
-        `http://localhost:3000/bookings/${bookingId}/rent`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ employee_id: user.employee_id }),
-        }
-      );
+      const response = await fetch(`${API_URL}/bookings/${bookingId}/rent`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ employee_id: user.employee_id }),
+      });
 
       if (!response.ok) throw new Error("Check-in failed");
 
@@ -101,7 +96,7 @@ const EmployeePage = () => {
   const handleCheckOut = async (bookingId: number) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/bookings/${bookingId}/checkout`,
+        `${API_URL}/bookings/${bookingId}/checkout`,
         {
           method: "PUT",
         }
@@ -118,12 +113,9 @@ const EmployeePage = () => {
 
   const handleArchive = async (bookingId: number) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/bookings/${bookingId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`${API_URL}/bookings/${bookingId}`, {
+        method: "DELETE",
+      });
 
       if (!response.ok) throw new Error("Archive failed");
 
@@ -142,7 +134,7 @@ const EmployeePage = () => {
     endDate: string
   ) => {
     try {
-      const response = await fetch("http://localhost:3000/bookings/in-person", {
+      const response = await fetch(`${API_URL}/bookings/in-person`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -170,13 +162,13 @@ const EmployeePage = () => {
     const fetchBookingsAndRooms = async () => {
       try {
         const [bookingsRes, roomsRes, hotelRes] = await Promise.all([
-          fetch(`http://localhost:3000/bookings/hotel/${user.hotel_id}`).then(
-            (res) => res.json()
+          fetch(`${API_URL}/bookings/hotel/${user.hotel_id}`).then((res) =>
+            res.json()
           ),
-          fetch(`http://localhost:3000/rooms/hotel/${user.hotel_id}`).then(
-            (res) => res.json()
+          fetch(`${API_URL}/rooms/hotel/${user.hotel_id}`).then((res) =>
+            res.json()
           ),
-          fetch(`http://localhost:3000/hotels/${user.hotel_id}`).then((res) =>
+          fetch(`${API_URL}/hotels/${user.hotel_id}`).then((res) =>
             res.json().then((data) => data.hotel_name)
           ),
         ]);

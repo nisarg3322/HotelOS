@@ -40,12 +40,12 @@
 //     setLoading(true);
 //     try {
 //       const hotel = await fetch(
-//         `http://localhost:3000/hotels/` + user?.hotel_id
+//         `${API_URL}/hotels/` + user?.hotel_id
 //       );
 //       const hotelData = await hotel.json();
 
 //       const res = await fetch(
-//         `http://localhost:3000/hotels/chain/` + hotelData?.chain_id
+//         `${API_URL}/hotels/chain/` + hotelData?.chain_id
 //       );
 //       const result = await res.json();
 
@@ -79,7 +79,7 @@
 //     e.preventDefault();
 
 //     try {
-//       const response = await fetch("http://localhost:3000/hotels/", {
+//       const response = await fetch("${API_URL}/hotels/", {
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
@@ -301,6 +301,7 @@ import { useUser } from "context/UserContext";
 import { useState, useEffect } from "react";
 import HotelCard from "./components/HotelCard";
 import AddHotelModal from "./components/AddHotelModal";
+import { API_URL } from "utils/config";
 
 export interface Hotel {
   hotel_id: number;
@@ -335,29 +336,6 @@ const Hotels: React.FC = () => {
 
   const { user } = useUser();
 
-  const fetchHotels = async () => {
-    setLoading(true);
-    try {
-      const hotelResponse = await fetch(
-        `http://localhost:3000/hotels/` + user?.hotel_id
-      );
-      const hotelData = await hotelResponse.json();
-
-      const res = await fetch(
-        `http://localhost:3000/hotels/chain/` + hotelData?.chain_id
-      );
-      const result = await res.json();
-
-      setHotels(Array.isArray(result) ? result : [result]);
-      setChainId(hotelData?.chain_id);
-      setChainName(hotelData?.chain_name);
-    } catch (error) {
-      console.error("Error fetching hotels:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleHotelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name in newHotel.address) {
@@ -380,7 +358,7 @@ const Hotels: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/hotels/", {
+      const response = await fetch(`${API_URL}/hotels/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -407,6 +385,28 @@ const Hotels: React.FC = () => {
   };
 
   useEffect(() => {
+    const fetchHotels = async () => {
+      setLoading(true);
+      try {
+        const hotelResponse = await fetch(
+          `${API_URL}/hotels/` + user?.hotel_id
+        );
+        const hotelData = await hotelResponse.json();
+
+        const res = await fetch(
+          `${API_URL}/hotels/chain/` + hotelData?.chain_id
+        );
+        const result = await res.json();
+
+        setHotels(Array.isArray(result) ? result : [result]);
+        setChainId(hotelData?.chain_id);
+        setChainName(hotelData?.chain_name);
+      } catch (error) {
+        console.error("Error fetching hotels:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchHotels();
   }, []);
 

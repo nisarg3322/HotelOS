@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URL } from "utils/config";
 
 interface Room {
   room_id: number;
@@ -40,7 +41,7 @@ const EditRoomModal: React.FC<EditRoomModalProps> = ({
     setLoading(true);
     try {
       const { room_id, ...roomData } = updatedRoom;
-      const response = await fetch(`http://localhost:3000/rooms/${room_id}`, {
+      const response = await fetch(`${API_URL}/rooms/${room_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(roomData),

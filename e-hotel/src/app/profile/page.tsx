@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useUser } from "context/UserContext"; // Your custom hook to get the user
+import { API_URL } from "utils/config";
 
 const ProfilePage = () => {
   const { user } = useUser();
@@ -23,9 +24,9 @@ const ProfilePage = () => {
       }
     }
   }, [user]);
-  const api = `http://localhost:3000/${
-    user?.is_customer ? "customers" : "employees"
-  }/${user?.is_customer ? user?.customer_id : user?.employee_id}`;
+  const api = `${API_URL}/${user?.is_customer ? "customers" : "employees"}/${
+    user?.is_customer ? user?.customer_id : user?.employee_id
+  }`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

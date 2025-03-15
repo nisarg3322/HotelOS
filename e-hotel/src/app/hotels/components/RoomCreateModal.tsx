@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_URL } from "utils/config";
 
 const RoomCreateModal: React.FC<{
   hotelId: number;
@@ -26,7 +27,7 @@ const RoomCreateModal: React.FC<{
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/rooms", {
+      const response = await fetch(`${API_URL}/rooms`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ hotel_id: hotelId, ...roomData }),

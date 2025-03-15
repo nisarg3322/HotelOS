@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Correct for App Router
 import { useUser } from "../../../context/UserContext";
+import { API_URL } from "utils/config";
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -27,8 +28,8 @@ const RegisterPage = () => {
 
     try {
       const url = isCustomer
-        ? "http://localhost:3000/login/customer"
-        : "http://localhost:3000/login/employee";
+        ? `${API_URL}/login/customer`
+        : `${API_URL}/login/employee`;
 
       type RequestBody = {
         email: string;
