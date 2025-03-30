@@ -1,3 +1,43 @@
 node_modules/
 .env
 frontend.log
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
+
+# Terraform crash log
+crash.log
+
+# Ignore Terraform plan output
+*.tfplan
+
+# Ignore Terraform variable files (especially sensitive ones)
+*.auto.tfvars
+*.tfvars
+
+# Ignore override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore generated SSH keys
+*.pem
+*.key
+
+# Ignore Terraform lock file
+.terraform.lock.hcl
+
+# Ignore Terraform working directory
+.terraform/
+
+# Ignore any logs
+*.log
+
+# Ignore local sensitive file storage
+*.sensitive
+
+# Ignore VS Code settings (optional)
+.vscode/
