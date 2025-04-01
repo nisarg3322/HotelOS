@@ -24,14 +24,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Debug Directory Structure
+        run: ls -R
+
       - name: Terraform Init
         run: terraform init
-        working-directory: backend/terraform
+        working-directory: ./backend/terraform
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: backend/terraform
+        working-directory: ./backend/terraform
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-        working-directory: backend/terraform
+        working-directory: ./backend/terraform
