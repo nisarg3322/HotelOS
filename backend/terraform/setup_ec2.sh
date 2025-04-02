@@ -30,8 +30,9 @@ echo "Changing directory to backend..."
 cd /home/ec2-user/e-hotel/backend
 
 echo "Creating .env file..."
+echo ${db_host}
 cat <<EOT | sudo tee /home/ec2-user/e-hotel/backend/.env
-DB_HOST=$db_host
+DB_HOST=${db_host}
 DB_USER=$DB_USER
 DB_PASSWORD=$DB_PASSWORD
 DB_NAME=mydatabase
@@ -47,7 +48,7 @@ sudo npm install
 
 echo "Running database initialization..."
 export PGPASSWORD="StrongPassword123!"
-psql -h $db_host -U nisarg -d mydatabase -p 5432 -f /home/ec2-user/e-hotel/backend/db-init/init.sql
+psql -h ${db_host} -U nisarg -d mydatabase -p 5432 -f /home/ec2-user/e-hotel/backend/db-init/init.sql
 
 echo "Starting server..."
 pm2 start server.js --name e-hotel
