@@ -12,7 +12,12 @@ const bookingRoutes = require("./routes/bookingRoutes");
 const loginRoutes = require("./routes/loginRoutes");
 const ollamaRoutes = require("./routes/ollamaRoutes");
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://e-hotel.vercel.app/", // Replace with your actual Vercel app URL
+  methods: "GET,POST,PUT,DELETE", // Allowed HTTP methods
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/hotelchains", hotelChainRoutes);
