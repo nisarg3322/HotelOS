@@ -131,8 +131,8 @@ resource "aws_instance" "app_server" {
 
 
   user_data = templatefile("${path.module}/setup_ec2.sh", {
-    db_host = aws_db_instance.postgres.endpoint
-  } )
+    db_host = aws_db_instance.postgres.address
+  })
 
 
   tags = {

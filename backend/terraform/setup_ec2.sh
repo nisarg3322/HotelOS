@@ -21,7 +21,7 @@ git clone https://github.com/nisarg3322/e-hotel.git /home/ec2-user/e-hotel
 echo "Installing Node.js..."
 curl -sL https://rpm.nodesource.com/setup_lts.x | sudo bash -
 sudo yum install nodejs -y
-npm install pm2@latest -g
+sudo npm install pm2@latest -g
 
 echo "Installing PostgreSQL client..."
 sudo yum install postgresql15 -y
@@ -30,7 +30,6 @@ echo "Changing directory to backend..."
 cd /home/ec2-user/e-hotel/backend
 
 echo "Creating .env file..."
-echo ${db_host}
 cat <<EOT | sudo tee /home/ec2-user/e-hotel/backend/.env
 DB_HOST=${db_host}
 DB_USER=$DB_USER
@@ -51,10 +50,12 @@ export PGPASSWORD="StrongPassword123!"
 psql -h ${db_host} -U nisarg -d mydatabase -p 5432 -f /home/ec2-user/e-hotel/backend/db-init/init.sql
 
 echo "Starting server..."
-pm2 start server.js --name e-hotel
+sudo pm2 start server.js --name e-hotel
 
 # Save the PM2 process list
-pm2 save
+sudo pm2 save
 
 # Configure PM2 to restart on system reboot
-pm2 startup systemd
+sudo pm2 startup systemd
+
+
