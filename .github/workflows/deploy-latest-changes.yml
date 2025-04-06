@@ -17,7 +17,7 @@ jobs:
         run: |
           sudo echo ${{ secrets.EC2_SSH_PRIVATE_KEY }} > temp_key.pem
           sudo chmod 600 temp_key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i temp_key.pem ec2-user@${{ secrets.EC2_EIP }}.compute-1.amazonaws.com << 'EOF'
+          sudo ssh -o StrictHostKeyChecking=no -i temp_key.pem ec2-user@${{ secrets.EC2_EIP }} << EOF
           sudo rm -f temp_key.pem
           cd /home/ec2-user/e-hotel
           git config --global --add safe.directory /home/ec2-user/e-hotel
