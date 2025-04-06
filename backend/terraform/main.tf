@@ -34,11 +34,82 @@ data "aws_ami" "latest_amazon_linux" {
   
 }
 
+# VPC
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "study-sync-vpc"
+  }
+}
+
+# Subnet
+# Subnet 1 (us-east-1a)
+resource "aws_subnet" "subnet_1" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = "us-east-1a"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "study-sync-subnet-1"
+  }
+}
+
+# Subnet 2 (us-east-1b)
+resource "aws_subnet" "subnet_2" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = "us-east-1b"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "study-sync-subnet-2"
+  }
+}
+
+
+# Internet Gateway
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "study-sync-igw"
+  }
+}
+
+# Route Table
+resource "aws_route_table" "main_rt" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = "study-sync-rt"
+  }
+}
+
+# Route Table Association
+resource "aws_route_table_association" "subnet_1_assoc" {
+  subnet_id      = aws_subnet.subnet_1.id
+  route_table_id = aws_route_table.main_rt.id
+}
+
+resource "aws_route_table_association" "subnet_2_assoc" {
+  subnet_id      = aws_subnet.subnet_2.id
+  route_table_id = aws_route_table.main_rt.id
+}
+
 
 # Security Group for EC2
 resource "aws_security_group" "app_sg" {
   name        = "study-sync-app-sg"
   description = "Allow SSH and Express server traffic"
+  vpc_id = aws_vpc.main.id
+
 
   ingress {
     from_port   = 22
@@ -68,6 +139,8 @@ resource "aws_security_group" "app_sg" {
 resource "aws_security_group" "rds_sg" {
   name        = "study-sync-rds-sg"
   description = "Allow PostgreSQL traffic from EC2"
+  vpc_id = aws_vpc.main.id
+
 
   ingress {
     from_port   = 5432
@@ -128,6 +201,7 @@ resource "aws_instance" "app_server" {
   key_name               = "e-hotels"
   vpc_security_group_ids = [aws_security_group.app_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.ec2_instance_profile.id  # Attach the IAM role
+  subnet_id = aws_subnet.subnet_1.id
 
 
   user_data = templatefile("${path.module}/setup_ec2.sh", {
@@ -176,7 +250,19 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible = false
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   skip_final_snapshot  = true
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
+
 }
+
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name       = "study-sync-db-subnet-group"
+  subnet_ids = [aws_subnet.subnet_1.id, aws_subnet.subnet_2.id]
+
+  tags = {
+    Name = "study-sync-db-subnet-group"
+  }
+}
+
 
 # Outputs
 output "ec2_public_ip" {
