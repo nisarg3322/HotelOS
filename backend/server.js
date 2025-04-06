@@ -25,7 +25,9 @@ app.use("/bookings", bookingRoutes);
 app.use("/ollama", ollamaRoutes);
 app.use("/login", loginRoutes);
 app.use("/", (req, res) => {
-  res.status(200).send("Welcome to the Hotel Management System API");
+  res
+    .status(200)
+    .send("Welcome to the Hotel Management System API from the backend!");
 });
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
