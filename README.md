@@ -12,7 +12,7 @@ I created a full-stack hotel management system with automated deployment to AWS.
 - Set up automated CI/CD pipelines with GitHub Actions for zero-downtime deployments
 - Created a secure AWS infrastructure with proper IAM roles and security groups
 - Built a responsive frontend with Next.js and a robust backend with Node.js
-- Implemented PM2 for process management and application monitoring
+- Implemented PM2 for process management and application monitoring.
 
 ## Infrastructure & Deployment
 
